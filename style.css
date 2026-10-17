@@ -403,6 +403,12 @@ ul.plain ul li { margin: 0.15rem 0; padding-left: 0; }
   --p-tint: #f1f6ec;
 }
 
+.project--teumseoul {
+  --p: #2f5d8a;
+  --p-soft: #bcd2e6;
+  --p-tint: #eff5fa;
+}
+
 .project--somsom {
   --p: #ab2948;
   --p-soft: #eec6d0;
@@ -575,6 +581,54 @@ ul.plain ul li { margin: 0.15rem 0; padding-left: 0; }
 .story dl > div.result dt {
   color: var(--p);
   font-weight: 600;
+}
+
+/* ---------------------------------------------------------
+   AI 경험
+   --------------------------------------------------------- */
+#ai .activity + .activity,
+#ai .group--minor { margin-top: 3rem; }
+
+#ai .group--minor { font-size: 0.9375rem; }
+
+.score-wrap { overflow-x: auto; }
+
+.score {
+  width: 100%;
+  min-width: 30rem;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.score th,
+.score td {
+  padding: 0.5rem 0.75rem 0.5rem 0;
+  border-top: 1px solid var(--line);
+  text-align: left;
+  font-weight: 400;
+}
+
+.score thead th {
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border-top: 0;
+}
+
+.score .final th,
+.score .final td {
+  background: var(--accent-tint);
+  font-weight: 600;
+  padding-left: 0.75rem;
+}
+
+.score caption {
+  caption-side: bottom;
+  padding-top: 0.5rem;
+  text-align: left;
+  color: var(--muted);
+  font-size: 0.8125rem;
 }
 
 /* ---------------------------------------------------------
