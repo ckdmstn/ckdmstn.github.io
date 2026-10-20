@@ -239,12 +239,12 @@
                 <dd>회원의 관심분야 하나를 삭제하면 해당 회원 정보 전체가 함께 삭제됐습니다. 자료마다 설명이 달라 며칠을 헤맸고, JPA의 <code>cascade</code>와 <code>orphanRemoval</code> 옵션을 바꿔봐도 회원이 삭제되지 않는 대신 다른 문제가 생기는 식으로 문제가 자리만 옮겨 다녔습니다.</dd>
               </div>
               <div>
-                <dt>원인</dt>
-                <dd>옵션을 하나씩 바꾸며 결과를 직접 확인한 끝에, 관심분야 엔티티에서 회원을 참조하는 <code>@ManyToOne</code>에 걸어둔 <code>cascade ALL</code>이 삭제 이벤트를 회원 엔티티까지 전파하고 있다는 걸 찾았습니다.</dd>
+                <dt>확인</dt>
+<dd>컬렉션 순회 중 수정 문제, <code>clear()</code>/<code>removeAll()</code> 사용, <code>orphanRemoval</code> 동작, Member 쪽 <code>cascade</code> 제한, Repository 삭제와 트랜잭션, 실행되는 SQL을 차례로 확인했고 구글링과 AI 대화를 병행했습니다.</dd>
               </div>
               <div class="result">
                 <dt>해결</dt>
-                <dd>옵션을 제거해 해결했습니다. 이후에는 연관관계를 설정할 때 한쪽의 변경이 반대편 데이터에 어떤 영향을 주는지부터 확인합니다.</dd>
+                <dd><code>Interest</code> 엔티티의 <code>deleteInterest()</code>(<code>this.member = null</code>) 메서드를 제거하자 문제가 사라졌습니다. 프로젝트 종료 후에도 원인이 명확하지 않아 따로 찾아보고, 자식 쪽 <code>@ManyToOne</code>의 <code>cascade ALL</code>이 삭제를 부모(Member)까지 전파할 수 있다는 점을 알게 됐습니다.</dd>
               </div>
             </dl>
           </div>
