@@ -248,11 +248,19 @@
               </div>
               <div>
                 <dt>확인</dt>
+<<<<<<< HEAD
                 <dd>컬렉션 순회 중 수정 문제, <code>clear()</code>/<code>removeAll()</code>, <code>orphanRemoval</code> 동작, Member 쪽 <code>cascade</code> 제한(<code>PERSIST</code>/<code>MERGE</code>), Repository 삭제와 트랜잭션, 실행되는 SQL을 확인했고, Member의 <code>deleteInterests()</code>를 없애고 Interest에 참조를 <code>null</code>로 바꾸는 <code>deleteInterest()</code>를 두는 수정도 해 보며 구글링과 AI 대화를 병행했습니다.</dd>
               </div>
               <div class="result">
                 <dt>해결</dt>
                 <dd><code>Interest</code> 엔티티의 <code>deleteInterest()</code>(<code>this.member = null</code>) 메서드를 제거하자 문제가 사라졌지만, 최종 코드에도 <code>Interest.member</code>의 <code>cascade = CascadeType.ALL</code>은 그대로 남아 있어 원인이 명확하지 않았고, 프로젝트 종료 후 따로 찾아보다 자식 쪽 <code>@ManyToOne</code>의 <code>cascade ALL</code>이 삭제를 부모(Member)까지 전파할 수 있다는 점을 알게 됐습니다.</dd>
+=======
+<dd>컬렉션 순회 중 수정 문제, <code>clear()</code>/<code>removeAll()</code> 사용, <code>orphanRemoval</code> 동작, Member 쪽 <code>cascade</code> 제한, Repository 삭제와 트랜잭션, 실행되는 SQL을 차례로 확인했고 구글링과 AI 대화를 병행했습니다.</dd>
+              </div>
+              <div class="result">
+                <dt>해결</dt>
+                <dd><code>Interest</code> 엔티티의 <code>deleteInterest()</code>(<code>this.member = null</code>) 메서드를 제거하자 문제가 사라졌습니다. 프로젝트 종료 후에도 원인이 명확하지 않아 따로 찾아보고, 자식 쪽 <code>@ManyToOne</code>의 <code>cascade ALL</code>이 삭제를 부모(Member)까지 전파할 수 있다는 점을 알게 됐습니다.</dd>
+>>>>>>> cf72a6a887d1b26abeb95a2dad0efdbc75246cb8
               </div>
             </dl>
           </div>
