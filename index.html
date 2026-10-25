@@ -95,6 +95,14 @@
           <dt>데이터베이스 / ORM</dt>
           <dd><span class="chip">MySQL</span><span class="chip">Oracle</span><span class="chip">JPA</span><span class="chip">Spring Data JPA</span><span class="chip">MyBatis</span></dd>
         </div>
+        <div class="skill-row">
+          <dt>AI</dt>
+          <dd><span class="chip">PyTorch</span><span class="chip">RAG</span><span class="chip">LangChain</span><span class="chip">LangGraph</span><span class="chip">Streamlit</span></dd>
+        </div>
+        <div class="skill-row">
+          <dt>도구</dt>
+          <dd><span class="chip">Git / GitHub</span></dd>
+        </div>
       </dl>
     </div>
   </section>
@@ -217,11 +225,11 @@
             <li>좋아요, 스크랩 기능</li>
             <li>스터디 팀블로그
               <ul>
-                <li>TODO: CRUD, 상태 변화 (완료, 미완료)</li>
-                <li>일정: CRUD</li>
-                <li>커뮤니티: CRUD, 파일 다운로드, 검색</li>
-                <li>팀원 평가: CRUD, 개인 신뢰도 조회 및 변경</li>
-                <li>장소 추천: geocoding, 장소 추천 알고리즘</li>
+                <li>- TODO: CRUD, 상태 변화 (완료, 미완료)</li>
+                <li>- 일정: CRUD</li>
+                <li>- 커뮤니티: CRUD, 파일 다운로드, 검색</li>
+                <li>- 팀원 평가: CRUD, 개인 신뢰도 조회 및 변경</li>
+                <li>- 장소 추천: geocoding, 장소 추천 알고리즘</li>
               </ul>
             </li>
             <li>Swagger 에러 응답 값 관련 config</li>
@@ -236,15 +244,15 @@
             <dl>
               <div>
                 <dt>상황</dt>
-                <dd>회원의 관심분야 하나를 삭제하면 해당 회원 정보 전체가 함께 삭제됐습니다. 자료마다 설명이 달라 며칠을 헤맸고, JPA의 <code>cascade</code>와 <code>orphanRemoval</code> 옵션을 바꿔봐도 회원이 삭제되지 않는 대신 다른 문제가 생기는 식으로 문제가 자리만 옮겨 다녔습니다.</dd>
+                <dd>회원의 관심분야를 삭제(수정)하면 관심분야뿐 아니라 회원(<code>Member</code>) 정보까지 삭제되는 오류가 났고, 한 시점에는 회원은 삭제되고 프로필은 남는 식으로 문제가 옮겨다녔습니다.</dd>
               </div>
               <div>
-                <dt>원인</dt>
-                <dd>옵션을 하나씩 바꾸며 결과를 직접 확인한 끝에, 관심분야 엔티티에서 회원을 참조하는 <code>@ManyToOne</code>에 걸어둔 <code>cascade ALL</code>이 삭제 이벤트를 회원 엔티티까지 전파하고 있다는 걸 찾았습니다.</dd>
+                <dt>확인</dt>
+                <dd>컬렉션 순회 중 수정 문제, <code>clear()</code>/<code>removeAll()</code>, <code>orphanRemoval</code> 동작, Member 쪽 <code>cascade</code> 제한(<code>PERSIST</code>/<code>MERGE</code>), Repository 삭제와 트랜잭션, 실행되는 SQL을 확인했고, Member의 <code>deleteInterests()</code>를 없애고 Interest에 참조를 <code>null</code>로 바꾸는 <code>deleteInterest()</code>를 두는 수정도 해 보며 구글링과 AI 대화를 병행했습니다.</dd>
               </div>
               <div class="result">
                 <dt>해결</dt>
-                <dd>옵션을 제거해 해결했습니다. 이후에는 연관관계를 설정할 때 한쪽의 변경이 반대편 데이터에 어떤 영향을 주는지부터 확인합니다.</dd>
+                <dd><code>Interest</code> 엔티티의 <code>deleteInterest()</code>(<code>this.member = null</code>) 메서드를 제거하자 문제가 사라졌지만, 최종 코드에도 <code>Interest.member</code>의 <code>cascade = CascadeType.ALL</code>은 그대로 남아 있어 원인이 명확하지 않았고, 프로젝트 종료 후 따로 찾아보다 자식 쪽 <code>@ManyToOne</code>의 <code>cascade ALL</code>이 삭제를 부모(Member)까지 전파할 수 있다는 점을 알게 됐습니다.</dd>
               </div>
             </dl>
           </div>
@@ -319,10 +327,10 @@
             <li>커뮤니티 페이지: 글 작성, 수정, 삭제 화면</li>
             <li>챗봇 화면
               <ul>
-                <li>대화 목록</li>
-                <li>답변을 기다리는 동안의 로딩 표시</li>
-                <li>오류 안내 문구</li>
-                <li>추천 장소 카드</li>
+                <li>- 대화 목록</li>
+                <li>- 답변을 기다리는 동안의 로딩 표시</li>
+                <li>- 오류 안내 문구</li>
+                <li>- 	추천 장소 카드</li>
               </ul>
             </li>
             <li>반응형: 모바일에서도 볼 수 있게 구성</li>
@@ -474,6 +482,76 @@
           <ul class="plain">
             <li>검증 정확도가 제출 점수와 근접하다는 것을 확인한 뒤, 3~4시간 걸리는 전체 추론을 돌리기 전에 검증 정확도로 개선 여부를 먼저 판단</li>
             <li>추가 학습 2,300건은 검증 정확도가 0.9267 → 0.9233으로 소폭 하락해 채택하지 않음</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="activity">
+        <div class="activity-head">
+          <h3>KBL 지식 서비스 (RAG)</h3>
+          <p class="period">2026.10.21 – 2026.10.23 (3일)</p>
+        </div>
+
+        <div class="group">
+          <h4 class="group-title">개요</h4>
+          <ul class="plain">
+            <li>과제: SSAFY AI 코어 프로젝트 2. KBL 2026-27 시즌 선수 186명·10개 팀에 대해 질문하면 선수 데이터와 위키백과 문서에서 근거를 찾아 출처와 함께 답하는 Streamlit 앱 (RAG)</li>
+            <li>참여 방식: 개인 과제. AI(Claude)와 함께 진행했고, 대부분의 구현 코드는 AI가 작성</li>
+            <li>환경: Python, Streamlit, Chroma, LangChain, LangGraph, MediaWiki API</li>
+            <li>저장소: <a href="https://github.com/ckdmstn/RAG_BASKETBALL_PJT" target="_blank" rel="noopener">github.com/ckdmstn/RAG_BASKETBALL_PJT</a></li>
+          </ul>
+        </div>
+
+        <div class="group">
+          <h4 class="group-title">역할 (AI와 함께 진행)</h4>
+          <ul class="plain">
+            <li>내가 한 일
+              <ul>
+                <li>- 프로젝트 진행: KBL 도메인을 정하고 심화 기능은 F2015(RAG 유무 비교)만 선택해, 시간이 부족한 상황에서 범위를 정해 마무리</li>
+                <li>- 단계별 구현과 실행: 코드를 실행하고 결과를 확인. 초반에는 실습 빈칸을 직접 채웠고(<code>retrieval.py</code>, <code>team_guide.py</code>, <code>search_conditions.py</code>), 후반에는 시간이 부족해 AI가 준 완성 코드를 붙여 넣고 실행</li>
+                <li>- 문제 발견과 보고: 실행 에러(<code>NameError</code>, <code>TypeError</code>, <code>StopIteration</code>), 이상한 결과(다른 팀 문서 선택, 반말·존댓말 혼용), 문서 불일치를 찾아 알리고 AI의 틀린 안내도 바로잡음</li>
+                <li>- 요구사항 결정: 답변은 존댓말, 근거는 한 목록으로 표시, 팀·선수를 고르지 않고도 질문할 수 있게 하는 방향 등</li>
+                <li>- 검증과 증빙: 단계별 실행 결과와 화면 캡처 10장, 키 없음·색인 없음 시나리오 시험, 응답 시간 측정, 키 노출 검색</li>
+                <li>- 문서와 형상 관리: GitHub 이슈·PR 작성, 설계 메모·프롬프트 기록·검증 로그 유지, 제출 구성 판단. 프롬프트 작성에도 참여</li>
+              </ul>
+            </li>
+            <li>AI(Claude)가 한 일
+              <ul>
+                <li>- 파이프라인 구조 설계 제안: 두 컬렉션, <code>scope</code> 꼬리표, 메타데이터 필터, "규칙은 코드·판단은 LLM" 원칙</li>
+                <li>- 프롬프트 개선, 대부분의 구현 코드</li>
+                <li>- 요구사항 정의서·설계문서·README 초안과 체크리스트 작성</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+
+        <div class="group">
+          <h4 class="group-title">주요 내용 (AI와 함께 진행)</h4>
+          <ul class="plain">
+            <li>처리 흐름: 질문 → 검색어 추출 프롬프트 → 위키백과(MediaWiki API) 검색·캐시 → 문서 선별 프롬프트 + 코드 규칙(날짜·팀·길이) → 청킹(1000자, 겹침 200) → Chroma 색인(<code>kbl_docs</code>, <code>kbl_players</code>) → 근거 기반 답변(<code>[근거 n]</code> 인용)</li>
+            <li>설계 원칙: 규칙 기반 처리는 코드, 판단은 LLM, LLM의 출력은 코드로 검증</li>
+            <li>검색 범위 필터: 팀·선수·리그 범위 필터를 적용하지 않으면 다른 팀 문서가 섞이는 문제가 있어 필터를 추가</li>
+            <li>기능: 선수에게 질문, 팀 가이드, 선수 찾기, 진행 상태·오류 안내, RAG 유무 비교</li>
+          </ul>
+        </div>
+
+        <div class="group">
+          <h4 class="group-title">결과</h4>
+          <ul class="plain">
+            <li>top-k 비교: 3은 질문에 필요한 근거가 빠지고 10은 관련 없는 문서가 섞여 6으로 결정 (질문 1개로 비교)</li>
+            <li>RAG 유무 비교: 정답을 아는 5개 질문에서 RAG 없이 0/5, RAG 사용 5/5. 정답 기준은 이 프로젝트가 색인한 자료</li>
+            <li>데이터에 없는 질문(예: 혈액형)은 "문서에서 확인되지 않습니다"로 답변</li>
+            <li>재색인 시 새 청크 0건</li>
+            <li>응답 시간: 질문 하나에 약 16~28초</li>
+          </ul>
+        </div>
+
+        <div class="group">
+          <h4 class="group-title">한계</h4>
+          <ul class="plain">
+            <li>규정 PDF는 색인하지 않아 규정 질문에는 "문서에서 확인되지 않습니다"로 답함</li>
+            <li>데이터는 AI가 공개 자료를 참고해 정리한 것이라 실제와 다를 수 있고, 정확도는 학습용</li>
+            <li>RAG 유무 비교는 질문 6개(정답이 있는 5개, 근거에 없는 1개)로 했고 정답 여부는 키워드로 자동 판정</li>
           </ul>
         </div>
       </div>
